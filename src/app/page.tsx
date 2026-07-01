@@ -1,65 +1,155 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { ShoppingBag, CreditCard, Truck, LinkIcon, CheckCircle, Headphones, Globe } from 'lucide-react'
 
-export default function Home() {
+const HOW_IT_WORKS = [
+  {
+    icon: LinkIcon,
+    step: '1',
+    title: 'Paste a Link',
+    description: 'Copy any Shopee or TikTok Shop product URL and paste it into VietBuy.',
+  },
+  {
+    icon: CreditCard,
+    step: '2',
+    title: 'Pay Securely',
+    description: 'Pay in USD with any major card. We buy the item on your behalf in Vietnam.',
+  },
+  {
+    icon: Truck,
+    step: '3',
+    title: 'Get Delivered',
+    description: 'We deliver directly to your hotel, guesthouse, or address in Vietnam.',
+  },
+]
+
+const BENEFITS = [
+  {
+    icon: CheckCircle,
+    title: 'No account needed',
+    description: 'Skip the sign-up hassle. No Vietnamese phone number required.',
+  },
+  {
+    icon: CreditCard,
+    title: 'Pay with any card',
+    description: 'Visa, Mastercard, Amex — pay in USD, no currency conversion headaches.',
+  },
+  {
+    icon: Truck,
+    title: 'Hotel delivery',
+    description: 'Items delivered right to your accommodation anywhere in Vietnam.',
+  },
+  {
+    icon: Headphones,
+    title: 'English support',
+    description: 'Our team communicates in English throughout the entire process.',
+  },
+]
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="bg-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#F26522] to-[#e05510] text-white">
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="relative max-w-4xl mx-auto px-4 py-20 sm:py-32 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+            <ShoppingBag className="w-3.5 h-3.5" />
+            Shopee &amp; TikTok Shop
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
+            Shop Vietnam,{' '}
+            <span className="text-white/90">Hassle-Free</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg sm:text-xl text-white/85 max-w-xl mx-auto mb-10 leading-relaxed">
+            Buy from Shopee &amp; TikTok Shop without an account. We handle everything — you just
+            pay and receive.
+          </p>
+          <Link
+            href="/order"
+            className="inline-flex items-center gap-2 bg-white text-[#F26522] font-bold text-base px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl hover:bg-white/95 transition-all"
+          >
+            <ShoppingBag className="w-5 h-5" />
+            Start Shopping
+          </Link>
+          <p className="text-sm text-white/60 mt-4">No account required · English support</p>
+        </div>
+      </section>
+
+      <section className="max-w-4xl mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">How It Works</h2>
+          <p className="text-gray-500 max-w-md mx-auto">
+            Three simple steps to get any Vietnamese product delivered to you.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          {HOW_IT_WORKS.map(({ icon: Icon, step, title, description }) => (
+            <div
+              key={step}
+              className="flex flex-col items-center text-center gap-4"
+            >
+              <div className="relative">
+                <div className="w-16 h-16 bg-[#F26522]/10 rounded-2xl flex items-center justify-center">
+                  <Icon className="w-7 h-7 text-[#F26522]" />
+                </div>
+                <span className="absolute -top-2 -right-2 w-6 h-6 bg-[#F26522] text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  {step}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">{title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">{description}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
+      </section>
+
+      <section className="bg-gray-50 border-y border-gray-100">
+        <div className="max-w-4xl mx-auto px-4 py-20">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+              Why Choose VietBuy?
+            </h2>
+            <p className="text-gray-500 max-w-md mx-auto">
+              Shopping in Vietnam just got easier for tourists and expats.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {BENEFITS.map(({ icon: Icon, title, description }) => (
+              <div
+                key={title}
+                className="bg-white rounded-2xl p-6 flex gap-4 shadow-sm border border-gray-100"
+              >
+                <div className="flex-shrink-0 w-10 h-10 bg-[#F26522]/10 rounded-xl flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-[#F26522]" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">{title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-4xl mx-auto px-4 py-20 text-center">
+        <div className="bg-gradient-to-br from-[#F26522] to-[#e05510] rounded-3xl p-10 text-white">
+          <Globe className="w-10 h-10 mx-auto mb-4 opacity-80" />
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Ready to shop Vietnam?</h2>
+          <p className="text-white/80 mb-8 max-w-sm mx-auto">
+            Paste your first product link and we&apos;ll handle the rest.
+          </p>
+          <Link
+            href="/order"
+            className="inline-flex items-center gap-2 bg-white text-[#F26522] font-bold text-sm px-7 py-3.5 rounded-xl hover:bg-white/95 transition-colors shadow-md"
+          >
+            Place an Order
+          </Link>
+        </div>
+      </section>
     </div>
-  );
+  )
 }
