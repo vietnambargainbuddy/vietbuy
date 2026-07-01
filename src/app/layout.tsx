@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import ServiceWorker from '@/components/ServiceWorker'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -18,6 +19,17 @@ export const metadata: Metadata = {
   title: 'VietBuy — Shop Vietnam Without an Account',
   description:
     'Buy from Shopee & TikTok Shop in Vietnam without creating an account. We handle purchases and deliver to your hotel. English support, pay with any card.',
+  manifest: '/manifest.json',
+  themeColor: '#F26522',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'VietBuy',
+  },
+  icons: {
+    icon: '/icons/icon-192.png',
+    apple: '/icons/icon-192.png',
+  },
 }
 
 export default function RootLayout({
@@ -31,6 +43,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <ServiceWorker />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
