@@ -15,6 +15,14 @@ export const SUPPORTED_PLATFORMS = {
     name: 'TikTok Shop',
     urlPatterns: ['tiktok.com/shop', 'shop.tiktok.com'],
   },
+  tiki: {
+    name: 'Tiki',
+    urlPatterns: ['tiki.vn'],
+  },
+  lazada: {
+    name: 'Lazada',
+    urlPatterns: ['lazada.vn'],
+  },
 } as const;
 
 export const ORDER_STATUS_LABELS: Record<string, string> = {

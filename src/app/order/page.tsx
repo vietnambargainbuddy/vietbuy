@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import UrlInput from '@/components/UrlInput'
+import SearchResults from '@/components/SearchResults'
 import ProductCard, { type Product as CardProduct } from '@/components/ProductCard'
 import PricingBreakdownDisplay from '@/components/PricingBreakdown'
 import OrderForm, { type OrderFormData } from '@/components/OrderForm'
 import { calculatePricing, formatVnd } from '@/lib/pricing'
-import type { Product as ScrapedProduct, PricingBreakdown } from '@/lib/types'
+import type { Product as ScrapedProduct, PricingBreakdown, SearchResult } from '@/lib/types'
 
 interface ScrapeResponse {
   product?: ScrapedProduct
@@ -15,9 +16,14 @@ interface ScrapeResponse {
   error?: string
 }
 
+interface SearchResponse {
+  results?: SearchResult[]
+  error?: string
+}
+
 type Step = 1 | 2 | 3
 
-const STEP_LABELS = ['Paste Link', 'Review Product', 'Your Details']
+const STEP_LABELS = ['Search', 'Review Product', 'Your Details']
 
 function toCardProduct(p: ScrapedProduct): CardProduct {
   return {
@@ -30,17 +36,28 @@ function toCardProduct(p: ScrapedProduct): CardProduct {
   }
 }
 
+function searchResultToCardProduct(r: SearchResult): CardProduct {
+  return {
+    name: r.name,
+    priceVnd: r.priceVnd,
+    priceUsd: r.priceUsd,
+    images: r.images.length > 0 ? r.images : r.image ? [r.image] : [],
+    shopName: r.shopName || r.shopLocation,
+    platform: r.platform,
+  }
+}
+
 export default function OrderPage() {
   const router = useRouter()
   const [step, setStep] = useState<Step>(1)
   const [isManualEntry, setIsManualEntry] = useState(false)
-  const [scrapeLoading, setScrapeLoading] = useState(false)
   const [submitLoading, setSubmitLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [cardProduct, setCardProduct] = useState<CardProduct | null>(null)
   const [pricing, setPricing] = useState<PricingBreakdown | null>(null)
   const [quantity, setQuantity] = useState(1)
   const [productUrl, setProductUrl] = useState('')
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
 
   const [manualForm, setManualForm] = useState({
     name: '',
@@ -50,41 +67,64 @@ export default function OrderPage() {
   const [manualErrors, setManualErrors] = useState<Record<string, string>>({})
 
   async function handleScrape(url: string) {
-    setScrapeLoading(true)
     setError(null)
+    setSearchResults([])
     setProductUrl(url)
-    try {
-      const res = await fetch('/api/scrape', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      })
-      const data: ScrapeResponse = await res.json()
+    const res = await fetch('/api/scrape', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    })
+    const data: ScrapeResponse = await res.json()
 
-      if (data.manualEntry) {
-        setIsManualEntry(true)
-        setStep(2)
-        return
-      }
-
-      if (!res.ok || data.error) {
-        setError(data.error ?? 'Failed to fetch product. Please try again.')
-        return
-      }
-
-      if (data.product) {
-        const card = toCardProduct(data.product)
-        const p = calculatePricing(data.product.price, quantity)
-        setCardProduct(card)
-        setPricing(p)
-        setIsManualEntry(false)
-        setStep(2)
-      }
-    } catch {
-      setError('Something went wrong. Please check your connection and try again.')
-    } finally {
-      setScrapeLoading(false)
+    if (data.manualEntry) {
+      setIsManualEntry(true)
+      setStep(2)
+      return
     }
+
+    if (!res.ok || data.error) {
+      setError(data.error ?? 'Failed to fetch product. Please try again.')
+      return
+    }
+
+    if (data.product) {
+      const card = toCardProduct(data.product)
+      const p = calculatePricing(data.product.price, quantity)
+      setCardProduct(card)
+      setPricing(p)
+      setIsManualEntry(false)
+      setStep(2)
+    }
+  }
+
+  async function handleKeywordSearch(keyword: string) {
+    setError(null)
+    setSearchResults([])
+    const res = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ keyword }),
+    })
+    const data: SearchResponse = await res.json()
+
+    if (!res.ok || data.error) {
+      setError(data.error ?? 'Search failed. Please try again.')
+      return
+    }
+
+    setSearchResults(data.results ?? [])
+  }
+
+  function handleResultSelect(result: SearchResult) {
+    const card = searchResultToCardProduct(result)
+    const p = calculatePricing(result.priceVnd, quantity)
+    setCardProduct(card)
+    setPricing(p)
+    setProductUrl(result.productUrl)
+    setIsManualEntry(false)
+    setSearchResults([])
+    setStep(2)
   }
 
   function validateManual(): boolean {
@@ -138,7 +178,7 @@ export default function OrderPage() {
           customer_phone: data.phone,
           delivery_address: data.address,
           delivery_notes: data.notes,
-          platform: cardProduct.platform === 'tiktok' ? 'tiktokshop' : 'shopee',
+          platform: cardProduct.platform,
         }),
       })
 
@@ -228,14 +268,10 @@ export default function OrderPage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <h1 className="text-xl font-bold text-gray-900 mb-1">Find Your Product</h1>
             <p className="text-sm text-gray-500 mb-6">
-              Paste a Shopee or TikTok Shop product link below.
+              Search for any product or paste a direct link
             </p>
-            <UrlInput onSubmit={handleScrape} />
-            {scrapeLoading && (
-              <p className="text-sm text-gray-400 mt-4 text-center animate-pulse">
-                Fetching product details…
-              </p>
-            )}
+            <UrlInput onUrlSubmit={handleScrape} onKeywordSearch={handleKeywordSearch} />
+            <SearchResults results={searchResults} onSelect={handleResultSelect} />
           </div>
         )}
 

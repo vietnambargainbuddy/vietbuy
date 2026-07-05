@@ -1,58 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { Clipboard, Search, Loader2, AlertCircle } from "lucide-react";
+import { Search, Loader2, AlertCircle } from "lucide-react";
 
-interface UrlInputProps {
-  onSubmit: (url: string) => void | Promise<void>;
+interface ProductSearchProps {
+  onUrlSubmit: (url: string) => void | Promise<void>;
+  onKeywordSearch: (keyword: string) => void | Promise<void>;
 }
 
-const VALID_PATTERN =
-  /^https?:\/\/(www\.)?(shopee\.vn|tiktok\.com|vt\.tiktok\.com|shop\.tiktok\.com)/i;
-
-function isValidUrl(value: string): boolean {
-  try {
-    new URL(value);
-  } catch {
-    return false;
-  }
-  return VALID_PATTERN.test(value.trim());
-}
-
-export default function UrlInput({ onSubmit }: UrlInputProps) {
-  const [url, setUrl] = useState("");
+export default function UrlInput({ onUrlSubmit, onKeywordSearch }: ProductSearchProps) {
+  const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = url.trim();
+    const trimmed = value.trim();
 
     if (!trimmed) {
-      setError("Please paste a product link.");
-      return;
-    }
-    if (!isValidUrl(trimmed)) {
-      setError("Only Shopee (shopee.vn) and TikTok Shop links are supported.");
+      setError("Please enter a product name or paste a link.");
       return;
     }
 
     setError(null);
     setLoading(true);
     try {
-      await onSubmit(trimmed);
+      if (trimmed.startsWith("http")) {
+        await onUrlSubmit(trimmed);
+      } else {
+        await onKeywordSearch(trimmed);
+      }
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handlePaste() {
-    try {
-      const text = await navigator.clipboard.readText();
-      setUrl(text.trim());
-      setError(null);
-    } catch {
-      setError("Clipboard access denied. Please paste manually.");
     }
   }
 
@@ -63,23 +42,16 @@ export default function UrlInput({ onSubmit }: UrlInputProps) {
           ${error ? "border-red-400 ring-2 ring-red-200" : "border-gray-300 focus-within:ring-2 focus-within:ring-[#F26522]/40 focus-within:border-[#F26522]"}
         `}
       >
-        <button
-          type="button"
-          onClick={handlePaste}
-          className="text-gray-400 hover:text-[#F26522] transition-colors flex-shrink-0"
-          aria-label="Paste from clipboard"
-        >
-          <Clipboard className="w-5 h-5" />
-        </button>
+        <Search className="w-5 h-5 text-gray-400 flex-shrink-0" />
 
         <input
-          type="url"
-          value={url}
+          type="text"
+          value={value}
           onChange={(e) => {
-            setUrl(e.target.value);
+            setValue(e.target.value);
             setError(null);
           }}
-          placeholder="Paste a Shopee or TikTok Shop product link..."
+          placeholder="What are you looking for? e.g. coffee, phone case, snacks..."
           className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent min-w-0"
           disabled={loading}
         />
@@ -94,7 +66,7 @@ export default function UrlInput({ onSubmit }: UrlInputProps) {
           ) : (
             <Search className="w-4 h-4" />
           )}
-          {loading ? "Finding…" : "Find Product"}
+          {loading ? "Searching..." : "Search"}
         </button>
       </div>
 

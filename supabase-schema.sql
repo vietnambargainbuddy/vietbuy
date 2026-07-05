@@ -8,7 +8,7 @@ create table orders (
   delivery_address text not null,
   delivery_notes text,
   product_url text not null,
-  platform text not null check (platform in ('shopee', 'tiktokshop')),
+  platform text not null check (platform in ('shopee', 'tiktokshop', 'tiki', 'lazada')),
   product_name text not null,
   product_image text,
   product_price_vnd numeric not null,

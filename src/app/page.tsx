@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import { ShoppingBag, CreditCard, Truck, LinkIcon, CheckCircle, Headphones, Globe } from 'lucide-react'
+import { ShoppingBag, CreditCard, Truck, Search, CheckCircle, Headphones, Globe } from 'lucide-react'
 
 const HOW_IT_WORKS = [
   {
-    icon: LinkIcon,
+    icon: Search,
     step: '1',
-    title: 'Paste a Link',
-    description: 'Copy any Shopee or TikTok Shop product URL and paste it into VietBuy.',
+    title: 'Search a Product',
+    description: 'Type what you want — we search Tiki, Lazada & more to find the best deals.',
   },
   {
     icon: CreditCard,
@@ -53,15 +53,15 @@ export default function HomePage() {
         <div className="relative max-w-4xl mx-auto px-4 py-20 sm:py-32 text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
             <ShoppingBag className="w-3.5 h-3.5" />
-            Shopee &amp; TikTok Shop
+            Tiki · Lazada · Shopee
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
             Shop Vietnam,{' '}
             <span className="text-white/90">Hassle-Free</span>
           </h1>
           <p className="text-lg sm:text-xl text-white/85 max-w-xl mx-auto mb-10 leading-relaxed">
-            Buy from Shopee &amp; TikTok Shop without an account. We handle everything — you just
-            pay and receive.
+            Buy from Vietnam&apos;s top e-commerce platforms without an account. We handle everything — you just
+            search, pay, and receive.
           </p>
           <Link
             href="/order"
@@ -140,7 +140,7 @@ export default function HomePage() {
           <Globe className="w-10 h-10 mx-auto mb-4 opacity-80" />
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Ready to shop Vietnam?</h2>
           <p className="text-white/80 mb-8 max-w-sm mx-auto">
-            Paste your first product link and we&apos;ll handle the rest.
+            Search for any product and we&apos;ll handle the rest.
           </p>
           <Link
             href="/order"

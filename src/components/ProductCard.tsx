@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Store } from "lucide-react";
 
-export type Platform = "shopee" | "tiktok";
+export type Platform = "shopee" | "tiktok" | "tiktokshop" | "tiki" | "lazada";
 
 export interface Product {
   name: string;
@@ -19,11 +19,17 @@ interface ProductCardProps {
 const PLATFORM_LABELS: Record<Platform, string> = {
   shopee: "Shopee",
   tiktok: "TikTok Shop",
+  tiktokshop: "TikTok Shop",
+  tiki: "Tiki",
+  lazada: "Lazada",
 };
 
 const PLATFORM_COLORS: Record<Platform, string> = {
   shopee: "bg-[#F26522] text-white",
   tiktok: "bg-black text-white",
+  tiktokshop: "bg-black text-white",
+  tiki: "bg-[#1A94FF] text-white",
+  lazada: "bg-[#F57224] text-white",
 };
 
 function formatVnd(amount: number): string {

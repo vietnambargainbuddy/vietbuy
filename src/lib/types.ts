@@ -1,6 +1,6 @@
 export type OrderStatus = 'pending' | 'paid' | 'purchasing' | 'purchased' | 'shipping' | 'delivered' | 'cancelled' | 'refunded';
 
-export type Platform = 'shopee' | 'tiktokshop';
+export type Platform = 'shopee' | 'tiktokshop' | 'tiki' | 'lazada';
 
 export interface Product {
   url: string;
@@ -55,4 +55,25 @@ export interface UpdateOrderBody {
   status?: OrderStatus;
   tracking_number?: string;
   admin_notes?: string;
+}
+
+export interface SearchResult {
+  id: string;
+  name: string;
+  image: string;
+  images: string[];
+  priceVnd: number;
+  priceUsd: number;
+  originalPriceVnd?: number;
+  sold: number;
+  rating: number;
+  ratingCount: number;
+  shopName: string;
+  shopLocation: string;
+  isOfficialShop: boolean;
+  isVerified: boolean;
+  brand?: string;
+  discount?: string;
+  productUrl: string;
+  platform: Platform;
 }
